@@ -1,0 +1,38 @@
+name: ClaimShield CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: python -m ruff check app tests
+      - run: python -m alembic upgrade head
+        env:
+          DATABASE_URL: sqlite:///./migration-test.db
+      - run: python -m pytest
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.22.2"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint:web
+      - run: npm run test:web
+      - run: npm run build:web
+
