@@ -1,0 +1,33 @@
+# Environment and secrets
+.env
+.env.local
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+*.db
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+coverage/
+playwright-report/
+test-results/
+
+# Runtime data
+storage/
+test-storage/
+.minio/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
