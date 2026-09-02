@@ -1,0 +1,17 @@
+{
+  "name": "claimshield-ai",
+  "private": true,
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace @claimshield/web",
+    "build:web": "npm run build --workspace @claimshield/web",
+    "lint:web": "npm run lint --workspace @claimshield/web",
+    "test:web": "npm run test --workspace @claimshield/web",
+    "test:e2e": "npm run test:e2e --workspace @claimshield/web"
+  },
+  "devDependencies": {
+    "jsdom": "^29.0.1"
+  }
+}
