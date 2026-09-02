@@ -1,0 +1,72 @@
+from enum import StrEnum
+
+
+class Role(StrEnum):
+    ADMIN = "ADMIN"
+    REVIEWER = "REVIEWER"
+    CLAIMANT = "CLAIMANT"
+
+
+class OrganizationType(StrEnum):
+    INSURER = "INSURER"
+    SURVEYOR_COMPANY = "SURVEYOR_COMPANY"
+    FLEET = "FLEET"
+    LEASING_COMPANY = "LEASING_COMPANY"
+
+
+class RecordStatus(StrEnum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+
+
+class PolicyStatus(StrEnum):
+    DRAFT = "DRAFT"
+    ACTIVE = "ACTIVE"
+    EXPIRED = "EXPIRED"
+    CANCELLED = "CANCELLED"
+
+
+class ClaimStatus(StrEnum):
+    DRAFT = "DRAFT"
+    EVIDENCE_PENDING = "EVIDENCE_PENDING"
+    PROCESSING = "PROCESSING"
+    REVIEW_PENDING = "REVIEW_PENDING"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
+
+
+class InspectionType(StrEnum):
+    POLICY_INCEPTION = "POLICY_INCEPTION"
+    RENEWAL = "RENEWAL"
+    CLAIM = "CLAIM"
+    POST_REPAIR = "POST_REPAIR"
+
+
+class InspectionStatus(StrEnum):
+    DRAFT = "DRAFT"
+    SUBMITTED = "SUBMITTED"
+    PROCESSING = "PROCESSING"
+    READY = "READY"
+    FAILED = "FAILED"
+
+
+class MediaStatus(StrEnum):
+    UPLOADED = "UPLOADED"
+    LOCKED = "LOCKED"
+    INVALID = "INVALID"
+
+
+class JobState(StrEnum):
+    QUEUED = "QUEUED"
+    RUNNING = "RUNNING"
+    SUCCEEDED = "SUCCEEDED"
+    FAILED = "FAILED"
+    CANCELLED = "CANCELLED"
+
+
+class ReviewDecision(StrEnum):
+    EVIDENCE_ACCEPTED = "EVIDENCE_ACCEPTED"
+    MORE_EVIDENCE_REQUIRED = "MORE_EVIDENCE_REQUIRED"
+    PHYSICAL_INSPECTION = "PHYSICAL_INSPECTION"
+    INVESTIGATION_REFERRAL = "INVESTIGATION_REFERRAL"
+
