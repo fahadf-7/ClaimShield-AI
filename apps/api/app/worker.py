@@ -64,6 +64,62 @@ def foundation_validation(self, job_id: str) -> dict:
             job.error_message = "Media validation could not be completed."
             job.completed_at = utcnow()
             db.commit()
-        raise self.retry(exc=exc, countdown=min(2 ** self.request.retries, 8)) from exc
+        raise self.retry(exc=exc, countdown=min(2**self.request.retries, 8)) from exc
+    finally:
+        db.close()
+
+
+@celery_app.task(
+    name="claimshield.damage_analysis",
+    bind=True,
+    max_retries=2,
+    soft_time_limit=settings.analysis_timeout_seconds,
+    time_limit=settings.analysis_timeout_seconds + 15,
+)
+def damage_analysis(self, job_id: str) -> dict:
+    from sqlalchemy import select
+
+    from app.common import utcnow
+    from app.database import SessionLocal
+    from app.enums import JobState
+    from app.modules.analysis.models import AnalysisRun
+    from app.modules.analysis.service import execute_analysis_run
+    from app.modules.jobs.models import AnalysisJob
+
+    db = SessionLocal()
+    try:
+        job = db.get(AnalysisJob, job_id)
+        if job is None:
+            return {"status": "missing"}
+        if job.state == JobState.SUCCEEDED.value:
+            return job.result_json
+        run = db.scalar(select(AnalysisRun).where(AnalysisRun.job_id == job.id))
+        if run is None:
+            raise ValueError("Analysis run is missing")
+        job.state = JobState.RUNNING.value
+        job.started_at = utcnow()
+        job.progress = 10
+        job.attempt_count += 1
+        db.commit()
+        result = execute_analysis_run(db, run.id)
+        job = db.get(AnalysisJob, job_id)
+        if job is None:
+            return result
+        job.state = JobState.SUCCEEDED.value
+        job.progress = 100
+        job.completed_at = utcnow()
+        job.result_json = result
+        db.commit()
+        return result
+    except Exception as exc:
+        db.rollback()
+        job = db.get(AnalysisJob, job_id)
+        if job is not None:
+            job.state = JobState.FAILED.value
+            job.error_category = "DAMAGE_ANALYSIS_ERROR"
+            job.error_message = "Damage analysis could not be completed. Review the run details or retry."
+            job.completed_at = utcnow()
+            db.commit()
+        raise self.retry(exc=exc, countdown=min(2**self.request.retries, 8)) from exc
     finally:
         db.close()

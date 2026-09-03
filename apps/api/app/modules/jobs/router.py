@@ -9,17 +9,13 @@ from app.enums import JobState, Role
 from app.modules.auth.models import User
 from app.modules.jobs.models import AnalysisJob
 from app.modules.jobs.schemas import JobRead
-from app.worker import foundation_validation
+from app.worker import damage_analysis, foundation_validation
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
 
 def scoped_job(db: Session, job_id: str, organization_id: str) -> AnalysisJob:
-    job = db.scalar(
-        select(AnalysisJob).where(
-            AnalysisJob.id == job_id, AnalysisJob.organization_id == organization_id
-        )
-    )
+    job = db.scalar(select(AnalysisJob).where(AnalysisJob.id == job_id, AnalysisJob.organization_id == organization_id))
     if job is None:
         raise HTTPException(status_code=404, detail="Job not found")
     return job
@@ -49,7 +45,9 @@ def retry_job(
     job.error_message = None
     record_audit(db, user, "JOB_RETRIED", "analysis_job", job.id)
     db.commit()
-    foundation_validation.delay(job.id)
+    if job.type == "DAMAGE_ANALYSIS":
+        damage_analysis.delay(job.id)
+    else:
+        foundation_validation.delay(job.id)
     db.refresh(job)
     return job
-
