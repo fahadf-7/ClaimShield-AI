@@ -1,0 +1,17 @@
+{
+  "manifest_version": "phase1-fixtures-v1",
+  "license": "CC0-1.0",
+  "generator": "ml/evaluation/generate_phase1_fixture.py",
+  "grouping_key": "synthetic_vehicle_id",
+  "splits": {
+    "validation": [
+      {
+        "image_id": "fixture-vehicle-001-claim-front",
+        "synthetic_vehicle_id": "fixture-vehicle-001",
+        "viewpoint": "FRONT",
+        "expected_parts": ["HOOD", "FRONT_BUMPER"],
+        "expected_damage": ["CRACK", "DENT", "SCRATCH"]
+      }
+    ]
+  }
+}
