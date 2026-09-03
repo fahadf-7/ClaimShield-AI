@@ -1,9 +1,9 @@
 import { Circle } from "lucide-react";
 
-const success = new Set(["ACTIVE", "READY", "SUCCEEDED", "COMPLETED", "LOCKED"]);
-const warning = new Set(["EVIDENCE_PENDING", "REVIEW_PENDING", "QUEUED", "DRAFT"]);
+const success = new Set(["ACTIVE", "READY", "SUCCEEDED", "COMPLETED", "LOCKED", "MINOR"]);
+const warning = new Set(["EVIDENCE_PENDING", "REVIEW_PENDING", "QUEUED", "DRAFT", "PARTIAL", "MODERATE"]);
 const info = new Set(["PROCESSING", "RUNNING", "SUBMITTED", "UPLOADED"]);
-const danger = new Set(["FAILED", "CANCELLED", "INVALID"]);
+const danger = new Set(["FAILED", "CANCELLED", "INVALID", "SEVERE"]);
 
 export function StatusBadge({ value }: { value: string }) {
   const tone = success.has(value)
@@ -22,4 +22,3 @@ export function StatusBadge({ value }: { value: string }) {
     </span>
   );
 }
-

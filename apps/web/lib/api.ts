@@ -39,7 +39,16 @@ export async function api<T>(path: string, options: RequestOptions = {}): Promis
   return response.json() as Promise<T>;
 }
 
+export async function apiBlob(path: string, token: string): Promise<Blob> {
+  const response = await fetch(`${API_URL}${path}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) {
+    throw new ApiError(`Media request failed (${response.status})`, response.status);
+  }
+  return response.blob();
+}
+
 export function readableError(error: unknown): string {
   return error instanceof Error ? error.message : "Something went wrong. Please try again.";
 }
-

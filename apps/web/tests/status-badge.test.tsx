@@ -12,5 +12,11 @@ describe("StatusBadge", () => {
     render(<StatusBadge value="SUCCEEDED" />);
     expect(screen.getByText("SUCCEEDED")).toHaveClass("badge-success");
   });
-});
 
+  it("distinguishes partial and severe analysis states", () => {
+    const { rerender } = render(<StatusBadge value="PARTIAL" />);
+    expect(screen.getByText("PARTIAL")).toHaveClass("badge-warning");
+    rerender(<StatusBadge value="SEVERE" />);
+    expect(screen.getByText("SEVERE")).toHaveClass("badge-danger");
+  });
+});
