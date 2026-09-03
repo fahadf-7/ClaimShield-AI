@@ -55,7 +55,7 @@ export function InspectionWorkspace({ inspectionId }: { inspectionId: string }) 
   const editable = item.status === "DRAFT";
 
   return <div className="stack">
-    <div className="notice"><LockKeyhole size={20} aria-hidden="true" /><div><strong>Original evidence is private.</strong><div>Images can be removed while this inspection is a draft. Submission locks originals and starts Phase 0 validation.</div></div></div>
+    <div className="notice"><LockKeyhole size={20} aria-hidden="true" /><div><strong>Original evidence is private.</strong><div>Images can be removed while this inspection is a draft. Submission locks originals and validates them before damage analysis can begin.</div></div></div>
     <section className="card section-card">
       <div className="section-heading"><div><h2>{item.type.replaceAll("_", " ")} inspection</h2><span className="muted">Created {new Date(item.created_at).toLocaleString()}</span></div><StatusBadge value={item.status} /></div>
       {editable && <div className="section-body"><form className="form-grid" onSubmit={uploadFile}>

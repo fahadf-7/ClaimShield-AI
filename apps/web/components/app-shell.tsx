@@ -106,7 +106,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <span className="phase-pill">
             <ShieldCheck size={15} aria-hidden="true" />
-            Phase 0 · Foundation
+            Phase 1 · Damage intelligence
           </span>
         </header>
         <main id="main-content">{children}</main>

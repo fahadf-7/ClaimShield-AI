@@ -35,7 +35,7 @@ export default function DashboardPage() {
         <div>
           <p className="eyebrow">Operations overview</p>
           <h1>Evidence workspace</h1>
-          <p>Track policy baselines and claim submissions. Phase 0 validates workflow and media only—no AI conclusions are shown.</p>
+          <p>Track submitted evidence and open each inspection to run versioned, reviewer-correctable damage analysis.</p>
         </div>
         <Link className="button button-primary" href="/claims">
           <Plus size={18} aria-hidden="true" /> New claim
@@ -89,13 +89,14 @@ export default function DashboardPage() {
         </section>
 
         <aside className="card section-card">
-          <div className="section-heading"><h2>Phase 0 workflow</h2></div>
+          <div className="section-heading"><h2>Phase 1 workflow</h2></div>
           <div className="section-body">
             <div className="timeline">
               <div className="timeline-item"><strong>1. Register vehicle</strong><span>Capture policy-linked identity details.</span></div>
               <div className="timeline-item"><strong>2. Create policy</strong><span>Define the covered vehicle and period.</span></div>
               <div className="timeline-item"><strong>3. Open claim</strong><span>Record incident context and status.</span></div>
               <div className="timeline-item"><strong>4. Submit inspection</strong><span>Upload immutable evidence and observe validation.</span></div>
+              <div className="timeline-item"><strong>5. Analyze and review</strong><span>Inspect overlays, confidence, severity, and correction history.</span></div>
             </div>
           </div>
         </aside>
@@ -103,4 +104,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
