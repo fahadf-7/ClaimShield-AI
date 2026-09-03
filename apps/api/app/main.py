@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.config import settings
 from app.database import get_db
+from app.modules.analysis.router import router as analysis_router
 from app.modules.auth.router import router as auth_router
 from app.modules.claims.router import router as claims_router
 from app.modules.inspections.router import router as inspections_router
@@ -17,8 +18,8 @@ from app.modules.vehicles.router import router as vehicles_router
 
 app = FastAPI(
     title="ClaimShield AI API",
-    version="0.1.0",
-    description="Phase 0 foundation API. No AI claim conclusions are produced.",
+    version="0.2.0",
+    description="Phase 1 damage-intelligence API with versioned, reviewable experimental findings.",
 )
 app.add_middleware(
     CORSMiddleware,
@@ -31,7 +32,7 @@ app.add_middleware(
 
 @app.get("/health", tags=["system"])
 def health() -> dict[str, str]:
-    return {"status": "ok", "phase": "0", "service": settings.app_name}
+    return {"status": "ok", "phase": "1", "service": settings.app_name}
 
 
 @app.get("/ready", tags=["system"])
@@ -47,6 +48,7 @@ def readiness(db: Session = Depends(get_db)) -> dict[str, str]:
 
 for router in (
     auth_router,
+    analysis_router,
     vehicles_router,
     policies_router,
     claims_router,

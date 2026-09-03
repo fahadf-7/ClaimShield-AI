@@ -26,17 +26,13 @@ ALLOWED_FORMATS = {"JPEG": ("image/jpeg", "jpg"), "PNG": ("image/png", "png"), "
 
 
 def scoped_media(db: Session, media_id: str, organization_id: str) -> Media:
-    item = db.scalar(
-        select(Media).where(Media.id == media_id, Media.organization_id == organization_id)
-    )
+    item = db.scalar(select(Media).where(Media.id == media_id, Media.organization_id == organization_id))
     if item is None:
         raise HTTPException(status_code=404, detail="Media not found")
     return item
 
 
-@router.post(
-    "/inspections/{inspection_id}/media", response_model=MediaRead, status_code=status.HTTP_201_CREATED
-)
+@router.post("/inspections/{inspection_id}/media", response_model=MediaRead, status_code=status.HTTP_201_CREATED)
 async def upload_media(
     inspection_id: str,
     viewpoint: str = Form(default="UNKNOWN"),
@@ -122,6 +118,20 @@ def download_media(
         content=data,
         media_type=item.media_type,
         headers={"Content-Disposition": f'attachment; filename="{safe_name}"'},
+    )
+
+
+@router.get("/media/{media_id}/content")
+def view_media(
+    media_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+) -> Response:
+    item = scoped_media(db, media_id, user.organization_id)
+    return Response(
+        content=get_storage().get(item.object_key),
+        media_type=item.media_type,
+        headers={"Cache-Control": "private, max-age=300"},
     )
 
 
