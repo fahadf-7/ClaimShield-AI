@@ -40,9 +40,7 @@ def create_access_token(user_id: str, organization_id: str, role: str) -> str:
     header = _encode_segment(json.dumps({"alg": "HS256", "typ": "JWT"}).encode())
     expires = utcnow() + timedelta(minutes=settings.access_token_minutes)
     payload = _encode_segment(
-        json.dumps(
-            {"sub": user_id, "org": organization_id, "role": role, "exp": int(expires.timestamp())}
-        ).encode()
+        json.dumps({"sub": user_id, "org": organization_id, "role": role, "exp": int(expires.timestamp())}).encode()
     )
     message = f"{header}.{payload}".encode()
     signature = _encode_segment(hmac.new(settings.secret_key.encode(), message, hashlib.sha256).digest())
@@ -62,4 +60,3 @@ def decode_access_token(token: str) -> dict[str, object]:
         return data
     except (ValueError, KeyError, json.JSONDecodeError) as exc:
         raise ValueError("Invalid or expired token") from exc
-

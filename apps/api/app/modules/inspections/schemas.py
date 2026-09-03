@@ -27,4 +27,3 @@ class InspectionRead(BaseModel):
 class InspectionDetail(InspectionRead):
     media: list[dict]
     jobs: list[dict]
-

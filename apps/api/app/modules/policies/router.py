@@ -17,9 +17,7 @@ router = APIRouter(prefix="/policies", tags=["policies"])
 
 
 def scoped_policy(db: Session, policy_id: str, organization_id: str) -> Policy:
-    policy = db.scalar(
-        select(Policy).where(Policy.id == policy_id, Policy.organization_id == organization_id)
-    )
+    policy = db.scalar(select(Policy).where(Policy.id == policy_id, Policy.organization_id == organization_id))
     if policy is None:
         raise HTTPException(status_code=404, detail="Policy not found")
     return policy

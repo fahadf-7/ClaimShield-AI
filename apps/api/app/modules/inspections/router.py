@@ -30,9 +30,7 @@ router = APIRouter(prefix="/inspections", tags=["inspections"])
 
 def scoped_inspection(db: Session, inspection_id: str, organization_id: str) -> Inspection:
     inspection = db.scalar(
-        select(Inspection).where(
-            Inspection.id == inspection_id, Inspection.organization_id == organization_id
-        )
+        select(Inspection).where(Inspection.id == inspection_id, Inspection.organization_id == organization_id)
     )
     if inspection is None:
         raise HTTPException(status_code=404, detail="Inspection not found")

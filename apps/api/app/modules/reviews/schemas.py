@@ -16,4 +16,3 @@ class ReviewRead(ReviewCreate):
     reviewer_id: str
     version: int
     created_at: datetime
-

@@ -15,4 +15,3 @@ class Review(IdMixin, TimestampMixin, Base):
     decision: Mapped[str] = mapped_column(String(50))
     notes: Mapped[str] = mapped_column(Text, default="")
     version: Mapped[int] = mapped_column(default=1)
-

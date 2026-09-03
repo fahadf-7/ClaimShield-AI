@@ -33,9 +33,7 @@ def scoped_claim(db: Session, claim_id: str, organization_id: str) -> Claim:
 
 
 @router.get("/dashboard/summary", response_model=DashboardSummary)
-def dashboard_summary(
-    db: Session = Depends(get_db), user: User = Depends(get_current_user)
-) -> DashboardSummary:
+def dashboard_summary(db: Session = Depends(get_db), user: User = Depends(get_current_user)) -> DashboardSummary:
     counts = dict(
         db.execute(
             select(Claim.status, func.count(Claim.id))
@@ -43,9 +41,7 @@ def dashboard_summary(
             .group_by(Claim.status)
         ).all()
     )
-    vehicles = db.scalar(
-        select(func.count(Vehicle.id)).where(Vehicle.organization_id == user.organization_id)
-    ) or 0
+    vehicles = db.scalar(select(func.count(Vehicle.id)).where(Vehicle.organization_id == user.organization_id)) or 0
     return DashboardSummary(
         open_claims=sum(
             counts.get(state.value, 0)
@@ -121,9 +117,7 @@ def update_claim(
     updates = payload.model_dump(exclude_unset=True)
     next_status = updates.get("status")
     if next_status and next_status != claim.status and next_status not in ALLOWED_TRANSITIONS[claim.status]:
-        raise HTTPException(
-            status_code=409, detail=f"Claim cannot move from {claim.status} to {next_status}"
-        )
+        raise HTTPException(status_code=409, detail=f"Claim cannot move from {claim.status} to {next_status}")
     for key, value in updates.items():
         setattr(claim, key, value)
     record_audit(db, user, "CLAIM_UPDATED", "claim", claim.id, {"fields": list(updates)})

@@ -41,11 +41,14 @@ def create_review(
     scoped_claim(db, claim_id, user.organization_id)
     if payload.decision not in {item.value for item in ReviewDecision}:
         raise HTTPException(status_code=422, detail="Invalid review decision")
-    latest = db.scalar(
-        select(func.max(Review.version)).where(
-            Review.claim_id == claim_id, Review.organization_id == user.organization_id
+    latest = (
+        db.scalar(
+            select(func.max(Review.version)).where(
+                Review.claim_id == claim_id, Review.organization_id == user.organization_id
+            )
         )
-    ) or 0
+        or 0
+    )
     review = Review(
         id=new_id(),
         organization_id=user.organization_id,

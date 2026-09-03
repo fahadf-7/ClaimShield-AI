@@ -29,4 +29,3 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse
 @router.get("/me", response_model=UserRead)
 def me(user: User = Depends(get_current_user)) -> User:
     return user
-

@@ -33,4 +33,3 @@ class PolicyRead(PolicyBase):
     id: str
     organization_id: str
     created_at: datetime
-

@@ -18,4 +18,3 @@ class Claim(IdMixin, TimestampMixin, Base):
     incident_location: Mapped[str | None] = mapped_column(String(255), nullable=True)
     description: Mapped[str] = mapped_column(Text)
     status: Mapped[str] = mapped_column(String(30), default=ClaimStatus.DRAFT.value)
-

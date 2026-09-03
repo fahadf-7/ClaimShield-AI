@@ -17,4 +17,3 @@ class MediaRead(BaseModel):
     sha256: str
     status: str
     created_at: datetime
-

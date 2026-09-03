@@ -15,4 +15,3 @@ class User(IdMixin, TimestampMixin, Base):
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     role: Mapped[str] = mapped_column(String(20), default=Role.CLAIMANT.value)
     status: Mapped[str] = mapped_column(String(20), default=RecordStatus.ACTIVE.value)
-

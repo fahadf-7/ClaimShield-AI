@@ -1,2 +1,1 @@
 """Vehicle domain."""
-

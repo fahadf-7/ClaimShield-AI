@@ -32,9 +32,7 @@ def get_current_user(
 
 
 def require_roles(*roles: str) -> Callable:
-    def dependency(
-        user: User = Depends(get_current_user), db: Session = Depends(get_db)
-    ) -> User:
+    def dependency(user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> User:
         if user.role not in roles:
             db.add(
                 AuditEvent(

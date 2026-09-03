@@ -71,4 +71,3 @@ def get_storage() -> ObjectStorage:
     if _storage is None:
         _storage = S3ObjectStorage() if settings.storage_backend == "s3" else LocalObjectStorage()
     return _storage
-

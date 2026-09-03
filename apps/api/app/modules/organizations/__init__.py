@@ -1,2 +1,1 @@
 """Organizations and audit events."""
-

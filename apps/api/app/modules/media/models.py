@@ -10,9 +10,7 @@ from app.enums import MediaStatus
 
 class Media(IdMixin, TimestampMixin, Base):
     __tablename__ = "media"
-    __table_args__ = (
-        UniqueConstraint("inspection_id", "sha256", name="uq_media_inspection_hash"),
-    )
+    __table_args__ = (UniqueConstraint("inspection_id", "sha256", name="uq_media_inspection_hash"),)
 
     organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id"), index=True)
     inspection_id: Mapped[str] = mapped_column(ForeignKey("inspections.id"), index=True)
@@ -26,4 +24,3 @@ class Media(IdMixin, TimestampMixin, Base):
     sha256: Mapped[str] = mapped_column(String(64), index=True)
     status: Mapped[str] = mapped_column(String(20), default=MediaStatus.UPLOADED.value)
     metadata_json: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
-

@@ -53,4 +53,3 @@ class VehicleHistory(BaseModel):
     policies: list[dict]
     claims: list[dict]
     inspections: list[dict]
-

@@ -18,4 +18,3 @@ class Inspection(IdMixin, TimestampMixin, Base):
     type: Mapped[str] = mapped_column(String(30), default=InspectionType.CLAIM.value)
     status: Mapped[str] = mapped_column(String(30), default=InspectionStatus.DRAFT.value)
     submitted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-

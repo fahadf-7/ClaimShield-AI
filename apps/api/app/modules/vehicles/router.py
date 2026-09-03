@@ -19,9 +19,7 @@ router = APIRouter(prefix="/vehicles", tags=["vehicles"])
 
 
 def scoped_vehicle(db: Session, vehicle_id: str, organization_id: str) -> Vehicle:
-    vehicle = db.scalar(
-        select(Vehicle).where(Vehicle.id == vehicle_id, Vehicle.organization_id == organization_id)
-    )
+    vehicle = db.scalar(select(Vehicle).where(Vehicle.id == vehicle_id, Vehicle.organization_id == organization_id))
     if vehicle is None:
         raise HTTPException(status_code=404, detail="Vehicle not found")
     return vehicle

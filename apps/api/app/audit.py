@@ -22,4 +22,3 @@ def record_audit(
             details_json=details or {},
         )
     )
-

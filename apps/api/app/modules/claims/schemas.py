@@ -38,4 +38,3 @@ class DashboardSummary(BaseModel):
     review_pending: int
     completed: int
     vehicles: int
-
