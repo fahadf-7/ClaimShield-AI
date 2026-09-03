@@ -47,7 +47,7 @@ services:
   api:
     build:
       context: ./apps/api
-    env_file: ${ENV_FILE:-.env.example}
+    env_file: ${ENV_FILE:-.env}
     command: sh -c "alembic upgrade head && python -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port 8000"
     ports:
       - "8000:8000"
@@ -60,11 +60,12 @@ services:
         condition: service_healthy
     volumes:
       - ./apps/api:/app
+      - model_cache:/app/model-cache
 
   worker:
     build:
       context: ./apps/api
-    env_file: ${ENV_FILE:-.env.example}
+    env_file: ${ENV_FILE:-.env}
     command: celery -A app.worker.celery_app worker --loglevel=info --concurrency=2
     depends_on:
       db:
@@ -75,6 +76,7 @@ services:
         condition: service_healthy
     volumes:
       - ./apps/api:/app
+      - model_cache:/app/model-cache
 
   web:
     build:
@@ -90,3 +92,4 @@ services:
 volumes:
   postgres_data:
   minio_data:
+  model_cache:

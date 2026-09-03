@@ -25,6 +25,7 @@ test-results/
 storage/
 test-storage/
 .minio/
+model-cache/
 
 # Editors and OS
 .idea/

@@ -26,6 +26,20 @@ class Settings(BaseSettings):
     min_image_width: int = 640
     min_image_height: int = 480
 
+    analysis_adapter: str = "fixture"
+    analysis_pipeline_version: str = "damage-pipeline-1.0.0"
+    analysis_threshold_version: str = "damage-thresholds-1.0.0"
+    analysis_timeout_seconds: int = 180
+    analysis_max_working_size: int = 1600
+    analysis_mask_threshold: float = 0.55
+    analysis_min_mask_ratio: float = 0.0005
+    analysis_min_part_overlap: float = 0.25
+    analysis_tie_margin: float = 0.05
+    clipseg_model_id: str = "CIDAS/clipseg-rd64-refined"
+    clipseg_revision: str = "999e0328d9e10b484360c477313983f9afdd7050"
+    model_cache_path: str = "./model-cache"
+    ml_local_files_only: bool = False
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     @property
@@ -38,6 +52,12 @@ class Settings(BaseSettings):
         path.mkdir(parents=True, exist_ok=True)
         return path
 
+    @property
+    def model_cache_directory(self) -> Path:
+        path = Path(self.model_cache_path).resolve()
+        path.mkdir(parents=True, exist_ok=True)
+        return path
+
 
 @lru_cache
 def get_settings() -> Settings:
@@ -45,4 +65,3 @@ def get_settings() -> Settings:
 
 
 settings = get_settings()
-
