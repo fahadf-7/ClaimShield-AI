@@ -64,9 +64,39 @@ class JobState(StrEnum):
     CANCELLED = "CANCELLED"
 
 
+class AnalysisState(StrEnum):
+    QUEUED = "QUEUED"
+    RUNNING = "RUNNING"
+    SUCCEEDED = "SUCCEEDED"
+    PARTIAL = "PARTIAL"
+    FAILED = "FAILED"
+
+
+class ModelTask(StrEnum):
+    PART_SEGMENTATION = "PART_SEGMENTATION"
+    DAMAGE_SEGMENTATION = "DAMAGE_SEGMENTATION"
+
+
+class FindingType(StrEnum):
+    PART = "PART"
+    DAMAGE = "DAMAGE"
+
+
+class FindingAction(StrEnum):
+    ACCEPT = "ACCEPT"
+    REJECT = "REJECT"
+    CORRECT = "CORRECT"
+
+
+class DamageSeverity(StrEnum):
+    UNKNOWN = "UNKNOWN"
+    MINOR = "MINOR"
+    MODERATE = "MODERATE"
+    SEVERE = "SEVERE"
+
+
 class ReviewDecision(StrEnum):
     EVIDENCE_ACCEPTED = "EVIDENCE_ACCEPTED"
     MORE_EVIDENCE_REQUIRED = "MORE_EVIDENCE_REQUIRED"
     PHYSICAL_INSPECTION = "PHYSICAL_INSPECTION"
     INVESTIGATION_REFERRAL = "INVESTIGATION_REFERRAL"
-
