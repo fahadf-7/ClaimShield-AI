@@ -1,3 +1,11 @@
+from app.modules.analysis.models import (
+    AnalysisRun,
+    DamageDetection,
+    DerivedArtifact,
+    FindingCorrection,
+    ModelVersion,
+    VehiclePartDetection,
+)
 from app.modules.auth.models import User
 from app.modules.claims.models import Claim
 from app.modules.inspections.models import Inspection
@@ -10,14 +18,19 @@ from app.modules.vehicles.models import Vehicle
 
 __all__ = [
     "AnalysisJob",
+    "AnalysisRun",
     "AuditEvent",
     "Claim",
+    "DamageDetection",
+    "DerivedArtifact",
+    "FindingCorrection",
     "Inspection",
     "Media",
+    "ModelVersion",
     "Organization",
     "Policy",
     "Review",
     "User",
     "Vehicle",
+    "VehiclePartDetection",
 ]
-
