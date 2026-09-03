@@ -14,5 +14,13 @@ export default defineConfig({
   projects: [
     { name: "desktop-edge", use: { ...devices["Desktop Chrome"], channel: "msedge" } },
     { name: "mobile-edge", use: { ...devices["Pixel 7"], channel: "msedge" } },
+    {
+      name: "mobile-edge-landscape",
+      use: {
+        ...devices["Pixel 7"],
+        channel: "msedge",
+        viewport: { width: 844, height: 390 },
+      },
+    },
   ],
 });
