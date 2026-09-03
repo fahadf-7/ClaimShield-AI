@@ -1,8 +1,8 @@
 # ClaimShield AI
 
-ClaimShield AI is a human-in-the-loop motor-insurance evidence workspace. Phase 0 establishes the product foundation: tenant-scoped records, private media ingestion, visible background-job states, and the reviewer web workflow. It deliberately performs no damage, fraud, or risk analysis yet.
+ClaimShield AI is a human-in-the-loop motor-insurance evidence workspace. Phase 1 adds versioned vehicle-part and visible-damage analysis to the Phase 0 foundation. Results are evidence for a reviewer: the product does not label fraud or make claim decisions.
 
-## Phase 0 capabilities
+## Current capabilities
 
 - Secure demo authentication with admin, reviewer, and claimant roles.
 - Organization-scoped vehicles, policies, claims, inspections, media, jobs, reviews, and audit events.
@@ -14,6 +14,11 @@ ClaimShield AI is a human-in-the-loop motor-insurance evidence workspace. Phase 
 - Responsive reviewer console and mobile-friendly forms.
 - PostgreSQL/pgvector, Redis, MinIO, FastAPI, worker, and Next.js Docker services.
 - Alembic migrations, API tests, frontend tests, and CI configuration.
+- Separate vehicle-part and damage segmentation adapters with an `UNKNOWN` path.
+- Damage-to-part mapping, visible-part coverage, and deterministic rule-based severity.
+- Immutable derived masks, overlays, thumbnails, model metadata, checksums, and run timings.
+- A reviewer analysis workspace with layer toggles, version selection, warnings, and correction history.
+- A deterministic synthetic adapter for repeatable development, plus an optional experimental CLIPSeg baseline.
 
 ## Demo accounts
 
@@ -34,6 +39,7 @@ Prerequisites: Docker Desktop with the Linux container engine running.
 ```powershell
 Copy-Item .env.example .env
 # Replace SECRET_KEY and development passwords in .env before any shared deployment.
+# Keep ANALYSIS_ADAPTER=fixture for the reproducible Phase 1 workflow.
 docker compose up --build
 ```
 
@@ -69,20 +75,25 @@ npm install
 npm run dev:web
 ```
 
-## Test the Phase 0 workflow
+## Test the Phase 1 workflow
 
 1. Open `http://localhost:3000/login` and sign in as the seeded reviewer.
 2. Open **Vehicles** and register a passenger vehicle.
 3. Open **Policies** and create an active policy for that vehicle.
-4. Return to the vehicle detail page and select **New baseline**.
-5. Upload at least one JPEG, PNG, or WebP image of 640×480 or larger.
-6. Select **Submit and lock evidence**. Confirm the inspection becomes `READY` and the validation job becomes `SUCCEEDED`.
-7. Try uploading again to the submitted inspection. The API must reject replacement because originals are immutable.
-8. Open **Claims**, create a claim whose incident date is within the policy period, and open it.
-9. Create a claim inspection, upload evidence, and submit it.
-10. Return to the vehicle detail page and confirm both inspections appear in its timeline.
+4. Open **Claims**, create a claim within the policy period, then create its claim inspection.
+5. Generate the fixed synthetic image from the repository root:
 
-The successful Phase 0 job message explicitly says that no AI analysis was performed.
+   ```powershell
+   .\.venv\Scripts\python.exe .\ml\evaluation\generate_phase1_fixture.py "$env:TEMP\claimshield-phase1-fixture.png"
+   ```
+
+6. Upload that PNG as the `FRONT` view and select **Submit and lock evidence**. Confirm the inspection becomes `READY`.
+7. In **Damage intelligence**, select **Start analysis**. The fixture adapter should report `SUCCEEDED`, two vehicle parts, and three damage findings.
+8. Toggle parts, damage, labels, and confidence; confirm the image layers update independently.
+9. In the `DENT` row, select **Correct**, change the class to `SCRATCH`, choose a severity, add a note, and save. Confirm `CORRECT v1` appears while the raw `DENT` result remains visible.
+10. Select **Run new version** and confirm the prior run remains selectable as version 1.
+
+The fixture adapter recognizes only the generated color-coded image and is for deterministic testing, not real damage recognition. To explore real photos, set `ANALYSIS_ADAPTER=clipseg`; the pinned CLIPSeg model is downloaded on first use and its output remains explicitly experimental.
 
 ## Automated checks
 
@@ -110,10 +121,13 @@ Browser tests require the seeded API to be running and Microsoft Edge to be inst
 npm run test:e2e
 ```
 
-## Important Phase 0 limitations
+## Important Phase 1 limitations
 
 - SQLite/local storage/eager jobs are development adapters only.
-- There is no computer-vision, retrieval, forensic, narrative, or risk output in this phase.
+- The fixed synthetic fixture validates the software data flow, not model quality.
+- Part mIoU and damage IoU/Dice/mAP on a representative licensed validation set are not established yet.
+- The optional CLIPSeg zero-shot adapter is an exploratory baseline, not production-validated evidence.
+- There is no repair pricing, damage-age, baseline comparison, duplicate search, forensic decision, narrative-consistency, or risk output in this phase.
 - Claimant capture invitations, automated image-quality scoring, OCR, and guided angles begin in later phases.
 - The current token implementation is suitable for this controlled prototype; production deployment requires hardened session management, reset/revocation flows, rate limits, and a security review.
 

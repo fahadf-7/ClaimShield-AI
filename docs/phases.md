@@ -18,7 +18,7 @@ Update the status table as work progresses:
 | Phase | Name | Status | MVP requirement |
 |---|---|---|---|
 | 0 | Foundation | In review | Required |
-| 1 | Damage Intelligence | Not started | Required |
+| 1 | Damage Intelligence | In progress | Required |
 | 2 | Policy Baseline Comparison | Not started | Required |
 | 3 | Reused Image Intelligence | Not started | Required |
 | 4 | Basic Media Forensics | Not started | Required, basic scope only |
@@ -294,9 +294,11 @@ Use uniqueness rules within an organization for policy number, registration numb
 
 ## 5. Phase 1 — Damage Intelligence
 
-**Status:** Not started  
-**Suggested effort:** 4–7 weeks part-time  
+**Status:** In review
+**Suggested effort:** 4–7 weeks part-time
 **Depends on:** Phase 0 complete
+
+**Implementation note (2026-09-03):** The Phase 1 application and evaluation infrastructure is implemented with a deterministic synthetic-fixture adapter for repeatable end-to-end tests and an optional pinned CLIPSeg zero-shot adapter for exploratory baselining. Fixture output is labelled evaluation-only, while CLIPSeg output is labelled experimental until fixed-manifest metrics and representative failure cases are recorded. Phase 1 remains in review because representative dataset auditing and model-quality acceptance metrics are intentionally not claimed as complete.
 
 ### 5.1 Goal
 
@@ -307,53 +309,53 @@ Analyze a vehicle image and produce a versioned, reviewable report of vehicle pa
 #### Dataset and taxonomy preparation
 
 - [ ] Audit candidate part/damage datasets for labels, image quality, duplicates, splits, and license terms.
-- [ ] Create a dataset/model license register before downloading or training.
-- [ ] Define a limited MVP taxonomy supported by available data.
-- [ ] Map external dataset labels into one canonical ClaimShield taxonomy.
-- [ ] Include `OTHER`/`UNKNOWN` behavior for unsupported or ambiguous cases.
+- [x] Create a dataset/model license register before downloading or training.
+- [x] Define a limited MVP taxonomy supported by available data.
+- [x] Map external dataset labels into one canonical ClaimShield taxonomy.
+- [x] Include `OTHER`/`UNKNOWN` behavior for unsupported or ambiguous cases.
 - [ ] Create immutable train/validation/test manifests grouped to avoid the same vehicle leaking across splits where possible.
 
 Start with common, visible classes rather than every class in `plan.md`. At minimum, aim to demonstrate dents, scratches, and cracks/broken components across major exterior parts. Expand only when evaluation data supports it.
 
 #### Model integration
 
-- [ ] Define a common model-adapter interface for input, output masks, classes, confidence, and version.
-- [ ] Establish a pretrained segmentation baseline before fine-tuning.
-- [ ] Keep vehicle-part and damage models separate.
-- [ ] Record model weights checksum, source, license, preprocessing, input size, thresholds, and class mapping.
-- [ ] Run inference in a worker with CPU/GPU capability detection and an explicit timeout.
-- [ ] Store raw detections separately from reviewer corrections.
-- [ ] Use SAM 2 only for annotation/mask refinement assistance, not as the damage classifier.
+- [x] Define a common model-adapter interface for input, output masks, classes, confidence, and version.
+- [x] Establish a pretrained segmentation baseline before fine-tuning.
+- [x] Keep vehicle-part and damage models separate.
+- [x] Record model weights checksum, source, license, preprocessing, input size, thresholds, and class mapping.
+- [x] Run inference in a worker with CPU/GPU capability detection and an explicit timeout.
+- [x] Store raw detections separately from reviewer corrections.
+- [x] Use SAM 2 only for annotation/mask refinement assistance, not as the damage classifier. (SAM 2 is not included in the runtime.)
 
 #### Analysis pipeline
 
-- [ ] Decode and normalize a derived working copy.
-- [ ] Run part segmentation.
-- [ ] Run damage segmentation.
-- [ ] Intersect each damage mask with candidate part masks.
-- [ ] Assign the best part only when overlap/confidence rules pass.
-- [ ] Calculate damage coverage as intersection area divided by visible part-mask area.
-- [ ] Calculate rule-based severity from damage type, coverage, region count, confidence, and part criticality.
-- [ ] Generate thumbnails, part masks, damage masks, and combined overlays.
-- [ ] Persist pipeline/model/threshold versions and timing.
+- [x] Decode and normalize a derived working copy.
+- [x] Run part segmentation.
+- [x] Run damage segmentation.
+- [x] Intersect each damage mask with candidate part masks.
+- [x] Assign the best part only when overlap/confidence rules pass.
+- [x] Calculate damage coverage as intersection area divided by visible part-mask area.
+- [x] Calculate rule-based severity from damage type, coverage, region count, confidence, and part criticality.
+- [x] Generate thumbnails, part masks, damage masks, and combined overlays.
+- [x] Persist pipeline/model/threshold versions and timing.
 
 #### Data/API additions
 
-- [ ] `model_versions` and/or an equivalent version registry.
-- [ ] `analysis_runs` for pipeline state and reproducibility.
-- [ ] `vehicle_part_detections` with class, confidence, mask key, and run.
-- [ ] `damage_detections` with class, confidence, mask key, severity, coverage, and run.
-- [ ] `finding_corrections` or versioned reviewer findings that preserve original outputs.
-- [ ] Inspection analysis start/status/results endpoints.
-- [ ] Reviewer correction and correction-history endpoints.
+- [x] `model_versions` and/or an equivalent version registry.
+- [x] `analysis_runs` for pipeline state and reproducibility.
+- [x] `vehicle_part_detections` with class, confidence, mask key, and run.
+- [x] `damage_detections` with class, confidence, mask key, severity, coverage, and run.
+- [x] `finding_corrections` or versioned reviewer findings that preserve original outputs.
+- [x] Inspection analysis start/status/results endpoints.
+- [x] Reviewer correction and correction-history endpoints.
 
 #### Reviewer UI
 
-- [ ] Original/overlay image viewer.
-- [ ] Toggle parts, damage, labels, and confidence.
-- [ ] Damage table with part, damage, severity, coverage, confidence, and source image.
-- [ ] Review actions to accept, reject, correct class/part/severity, and add notes.
-- [ ] Clear `UNKNOWN`, low-confidence, partial-analysis, and failed-analysis states.
+- [x] Original/overlay image viewer.
+- [x] Toggle parts, damage, labels, and confidence.
+- [x] Damage table with part, damage, severity, coverage, confidence, and source image.
+- [x] Review actions to accept, reject, correct class/part/severity, and add notes.
+- [x] Clear `UNKNOWN`, low-confidence, partial-analysis, and failed-analysis states.
 
 ### 5.3 Things to make sure of
 
@@ -368,13 +370,13 @@ Start with common, visible classes rather than every class in `plan.md`. At mini
 
 ### 5.4 Required tests and evaluation
 
-- [ ] Unit tests for mask intersection, overlap selection, coverage, clipping, empty masks, and multi-part ties.
-- [ ] Unit tests for severity boundaries and safety-critical part rules.
-- [ ] Model-adapter contract tests using fixed fixture outputs.
+- [x] Unit tests for mask intersection, overlap selection, coverage, clipping, empty masks, and multi-part ties.
+- [x] Unit tests for severity boundaries and safety-critical part rules.
+- [x] Model-adapter contract tests using fixed fixture outputs.
 - [ ] Integration tests for GPU/CPU selection, persistence, object artifacts, timeout, retry, and partial failure.
-- [ ] API authorization tests for analysis and corrections.
+- [x] API authorization tests for analysis and corrections.
 - [ ] UI tests for overlay toggles, tables, low confidence, correction, and failure states.
-- [ ] End-to-end test: upload → analyze → view overlay → correct finding → view history.
+- [x] End-to-end test: upload → analyze → view overlay → correct finding → view history.
 - [ ] Record part mIoU/per-class IoU and damage mask mAP/IoU/Dice on fixed manifests.
 - [ ] Record per-class precision/recall and confusion cases; do not report only aggregate metrics.
 
@@ -396,11 +398,11 @@ Set acceptance thresholds only after recording the first honest baseline. Docume
 
 ### 5.7 Exit checklist
 
-- [ ] Fixed validation images produce repeatable, persisted results.
-- [ ] Each finding exposes evidence, confidence, and model version.
-- [ ] Damage-to-part mapping and severity rules pass unit tests.
-- [ ] Reviewers can correct every displayed finding and see the original result.
-- [ ] Failed or incomplete analysis cannot appear as a complete report.
+- [x] Fixed validation images produce repeatable, persisted results.
+- [x] Each finding exposes evidence, confidence, and model version.
+- [x] Damage-to-part mapping and severity rules pass unit tests.
+- [x] Reviewers can correct every displayed finding and see the original result.
+- [x] Failed or incomplete analysis cannot appear as a complete report.
 - [ ] Metrics and known failure modes are documented.
 - [ ] Required automated tests pass.
 
